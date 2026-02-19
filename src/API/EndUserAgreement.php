@@ -32,21 +32,23 @@ class EndUserAgreement
      * @param string[] $accessScope The requested access scope. All by default. See Enums\AccessScope for possible values.
      * @param int|null $maxHistoricalDays Maximum number of days of transaction data to retrieve. 90 by default.
      * @param int|null $accessValidForDays How long access to the end-user's account will be available. 90 days by default.
-     *
+     * @param bool $reconfirmation Whether reconfirmation of the agreement is enabled after the access validity period expires. False by default.
      * @return array
      */
     public function createEndUserAgreement(
         string $institutionId,
         array $accessScope = ['details', 'balances', 'transactions'],
         int $maxHistoricalDays = 90,
-        int $accessValidForDays = 90
+        int $accessValidForDays = 90,
+        bool $reconfirmation = false
     ): array
     {
         $payload = [
             'max_historical_days' => $maxHistoricalDays,
             'access_valid_for_days' => $accessValidForDays,
             'access_scope' => $accessScope,
-            'institution_id' => $institutionId
+            'institution_id' => $institutionId,
+            'reconfirmation' => $reconfirmation
         ];
         $response = $this->requestHandler->post('agreements/enduser/', [
             'json' => $payload

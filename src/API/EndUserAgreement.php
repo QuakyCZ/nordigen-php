@@ -2,6 +2,7 @@
 
 namespace Nordigen\NordigenPHP\API;
 
+use JsonException;
 use Nordigen\NordigenPHP\API\RequestHandler;
 
 class EndUserAgreement
@@ -65,6 +66,25 @@ class EndUserAgreement
         $response = $this->requestHandler->get("agreements/enduser/{$endUserAgreementId}/");
         $json = json_decode($response->getBody()->getContents(), true);
         return $json;
+    }
+
+    /**
+     * Reconfirm an End-user agreement to extend its validity and access scope.
+     * @param string $endUserAgreementId
+     * @param string $redirect
+     * @return array
+     * @throws JsonException
+     */
+    public function reconfirmUserAgreement(string $endUserAgreementId, string $redirect): array
+    {
+        $response = $this->requestHandler->post(
+            "agreements/enduser/{$endUserAgreementId}/reconfirm/", [
+                'json' => [
+                    'redirect' => $redirect
+                ]
+            ]
+        );
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
